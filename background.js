@@ -31,27 +31,28 @@ chrome.commands.onCommand.addListener(async (command) => {
         case "play-pause-media":
             chrome.scripting.executeScript({
                 target: { tabId: tabId },
-                function: simulateSpaceKeyPress
+                function: dispatchPlayPause
             });
             break;
         case "next-media":
             chrome.scripting.executeScript({
                 target: { tabId: tabId },
-                function: simulateRightArrowKeyPress
+                function: dispatchNextTrack
             });
             break;
         case "previous-media":
             chrome.scripting.executeScript({
                 target: { tabId: tabId },
-                function: simulateLeftArrowKeyPress
+                function: dispatchPrevTrack
             });
             break;
     }
 });
 
+// handle tab removal
 chrome.tabs.onRemoved.addListener(async(tabId) => {
     let storedTabId = await getStoredTabId();
-    console.log("delted tab", tabId);
+    // clear storage if stored tab has been deleted
     if (tabId == storedTabId) {
         chrome.storage.local.clear();
     }
@@ -70,6 +71,7 @@ function findAndStoreCurrentYoutubeMusicTab() {
     })
 }
 
+// get the currently stored tab id
 function getStoredTabId() {
     return new Promise((resolve) => {
         chrome.storage.local.get(["tabId"]).then((result) => {
@@ -78,6 +80,7 @@ function getStoredTabId() {
     })
 }
 
+// check if given tab id exists
 function exists(tabId) {
     return new Promise((resolve) => {
         chrome.tabs.query({}, function (tabs) {
@@ -87,21 +90,25 @@ function exists(tabId) {
     })
 }
 
+// store the given tab id
 function storeTabId(tabId) {
     chrome.storage.local.set({ tabId: tabId });
 }
 
-function simulateSpaceKeyPress() {
-    var spaceKeyEvent = new KeyboardEvent("keydown", { key: "SPACE" });
-    document.dispatchEvent(spaceKeyEvent);
+// dispatches the key event to play/pause songs on youtube music
+function dispatchPlayPause() {
+    var playPauseKeyEvent = new KeyboardEvent("keydown", { key: "SPACE" });
+    document.dispatchEvent(playPauseKeyEvent);
 }
 
-function simulateRightArrowKeyPress() {
-    var rightArrowKeyEvent = new KeyboardEvent("keydown", { key: "J" });
-    document.dispatchEvent(rightArrowKeyEvent);
+// dispatches the key event to play the next track on youtube music
+function dispatchNextTrack() {
+    var nextTrackKeyEvent = new KeyboardEvent("keydown", { key: "J" });
+    document.dispatchEvent(nextTrackKeyEvent);
 }
 
-function simulateLeftArrowKeyPress() {
-    var leftArrowKeyEvent = new KeyboardEvent("keydown", { key: "K" });
-    document.dispatchEvent(leftArrowKeyEvent);
+// dispatches the key event to play the previous track on youtube music
+function dispatchPrevTrack() {
+    var prevTrackKeyEvent = new KeyboardEvent("keydown", { key: "K" });
+    document.dispatchEvent(prevTrackKeyEvent);
 }
