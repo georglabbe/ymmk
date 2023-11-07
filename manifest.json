@@ -1,0 +1,33 @@
+{
+    "manifest_version": 3,
+    "name": "Youtube Music Media Keys",
+    "version": "1.0",
+    "description": "Simply enables your media keys for youtube music.",
+    "permissions": ["tabs", "storage", "commands", "activeTab"],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {},
+    "icons": {
+      "48": "icon.png"
+    },
+    "commands": {
+      "play-pause-media": {
+        "suggested_key": {
+          "default": "MediaPlayPause",
+          "mac": "MediaPlayPause"
+        },
+        "description": "Play/Pause Media",
+        "global": true
+      },
+      "next-media": {
+        "suggested_key": {
+          "default": "MediaNextTrack",
+          "mac": "MediaNextTrack"
+        },
+        "description": "Next Track",
+        "global": true
+      }
+    }
+  }
+  
